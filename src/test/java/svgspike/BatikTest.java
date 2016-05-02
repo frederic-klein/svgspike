@@ -20,7 +20,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -94,6 +93,7 @@ public final class BatikTest {
     }
     
     /**
+     * @param doc
      * @param signGroup
      * @return the reference point, inkscape uses for group (bottom left corner of group)
      */
@@ -110,21 +110,8 @@ public final class BatikTest {
             Rectangle2D rc = gvtElement.getSensitiveBounds();
             rc = ((Path2D) gvtElement.getTransform().createTransformedShape(rc)).getBounds2D();
     		
-            ArrayList<Point2D> poi = new ArrayList<Point2D>();
-            
-            poi.add(new Point2D.Double(rc.getX(),rc.getY()));
-            poi.add(new Point2D.Double(rc.getX()+rc.getWidth(),rc.getY()));
-            poi.add(new Point2D.Double(rc.getX(),rc.getY()+rc.getHeight()));
-            poi.add(new Point2D.Double(rc.getX()+rc.getWidth(),rc.getY()+rc.getHeight()));
-            
-            //find xMin and yMax in poi
-            double xMin = poi.get(0).getX();
-            double yMax = poi.get(0).getY();
-            for (Point2D point : poi) {
-				if(xMin>point.getX()) xMin = point.getX();
-				if(yMax<point.getY()) yMax = point.getY();
-			}
-            referencePoint = new Point2D.Double(xMin, yMax);
+          //find xMin and yMax in poi
+            referencePoint = new Point2D.Double(rc.getMinX(), rc.getMaxY());
             
 		} catch (Exception e) {
 			e.printStackTrace();
